@@ -1,10 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Snake - Portfolio Game</title>
+
+    <!-- Spill-stil -->
+    <link rel="stylesheet" href="../css/cyber-snake.css">
 </head>
 <body>
+
+<!-- Tilbake-knapp -->
+<a href="../index.html" class="back-btn" aria-label="Tilbake til porteføljen">
+    <span>←</span>
+    Back to Portfolio
+</a>
+
+<div class="game-container">
+
+    <!-- Score + Tittel -->
+    <div class="game-header">
+        <h1 class="game-title">CYBER SNAKE</h1>
+        <div class="score-display">
+            <span class="score-label">SCORE:</span>
+            <span id="score" class="score-value">0</span>
+        </div>
+    </div>
+
+    <!-- Spillet -->
+    <div class="game-wrapper">
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <div class="controls-hint">
+        Use Arrow Keys or WASD to move
+    </div>
+</div>
+
+<!-- Game Over vindu -->
+<div id="gameOverModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">GAME OVER</h2>
+        <p class="final-score">Score: <span id="finalScore">0</span></p>
+        <button id="restartBtn" class="restart-btn">RESTART</button>
+    </div>
+</div>
+
+<!-- Spill-logikk -->
+<script src="../js/cyber-snake.js"></script>
 
 </body>
 </html>
