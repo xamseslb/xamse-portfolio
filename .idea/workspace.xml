@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8ea558e3-b93a-4f2f-b871-7c76a4dcff7c" name="Changes" comment="Test Changes">
+      <change beforePath="$PROJECT_DIR$/js/ai-worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ai-worker.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+        <option value="JavaScript File" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="654dcbcc-66d8-4c91-880a-912351dafe93" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="34yoLuxc0cjTktnwtDXFwWPjlpJ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/47940/OneDrive - OsloMet/Dokumenter/website/xamse-portfolio-api&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="xamse-portfolio-api" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="xamse-portfolio-api" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-84258761d1cc-intellij.indexing.shared.core-IU-243.28141.18" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.28141.18" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8ea558e3-b93a-4f2f-b871-7c76a4dcff7c" name="Changes" comment="" />
+      <created>1762195119870</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1762195119870</updated>
+      <workItem from="1762195121032" duration="20176000" />
+      <workItem from="1762351637605" duration="168000" />
+      <workItem from="1762351826872" duration="6056000" />
+      <workItem from="1762363393461" duration="133000" />
+      <workItem from="1762363536715" duration="49000" />
+      <workItem from="1762363599546" duration="30000" />
+    </task>
+    <task id="LOCAL−00001" summary="Gjort ferdig Html og css">
+      <option name="closed" value="true" />
+      <created>1762205773821</created>
+      <option name="number" value="LOCAL−00001" />
+      <option name="presentableId" value="LOCAL−00001" />
+      <updated>1762205773821</updated>
+    </task>
+    <task id="LOCAL−00002" summary="La til JavaScript for mobilmeny:&#10;- Toggle åpne/lukke meny&#10;- Lukk meny når en navigasjonslenke klikkes">
+      <option name="closed" value="true" />
+      <created>1762207926476</created>
+      <option name="number" value="LOCAL−00002" />
+      <option name="presentableId" value="LOCAL−00002" />
+      <updated>1762207926476</updated>
+    </task>
+    <task id="LOCAL−00003" summary="Ryddet opp i animasjoner og scroll-funksjoner">
+      <option name="closed" value="true" />
+      <created>1762261569546</created>
+      <option name="number" value="LOCAL−00003" />
+      <option name="presentableId" value="LOCAL−00003" />
+      <updated>1762261569546</updated>
+    </task>
+    <task id="LOCAL−00004" summary="Forbedret typewriter-effekt i About-seksjonen">
+      <option name="closed" value="true" />
+      <created>1762265587025</created>
+      <option name="number" value="LOCAL−00004" />
+      <option name="presentableId" value="LOCAL−00004" />
+      <updated>1762265587025</updated>
+    </task>
+    <task id="LOCAL−00005" summary="Forbedret index.html og påbegynte utvikling av Cyber Snake (HTML + CSS)">
+      <option name="closed" value="true" />
+      <created>1762271954198</created>
+      <option name="number" value="LOCAL−00005" />
+      <option name="presentableId" value="LOCAL−00005" />
+      <updated>1762271954198</updated>
+    </task>
+    <task id="LOCAL−00006" summary="La til Snake-spillet med canvas-tegning, bevegelse, mat-oppdatering og score-håndtering">
+      <option name="closed" value="true" />
+      <created>1762287214993</created>
+      <option name="number" value="LOCAL−00006" />
+      <option name="presentableId" value="LOCAL−00006" />
+      <updated>1762287215005</updated>
+    </task>
+    <task id="LOCAL−00007" summary="&#10;La til DIRECTION-objekt for styring">
+      <option name="closed" value="true" />
+      <created>1762346781745</created>
+      <option name="number" value="LOCAL−00007" />
+      <option name="presentableId" value="LOCAL−00007" />
+      <updated>1762346781745</updated>
+    </task>
+    <task id="LOCAL−00008" summary="&#10;fullført snake.js for nå">
+      <option name="closed" value="true" />
+      <created>1762349147441</created>
+      <option name="number" value="LOCAL−00008" />
+      <option name="presentableId" value="LOCAL−00008" />
+      <updated>1762349147441</updated>
+    </task>
+    <task id="LOCAL−00009" summary="&#10;Endret snake.js for nå">
+      <option name="closed" value="true" />
+      <created>1762351526484</created>
+      <option name="number" value="LOCAL−00009" />
+      <option name="presentableId" value="LOCAL−00009" />
+      <updated>1762351526484</updated>
+    </task>
+    <task id="LOCAL−00010" summary="Påbeygnt game.html">
+      <option name="closed" value="true" />
+      <created>1762353613021</created>
+      <option name="number" value="LOCAL−00010" />
+      <option name="presentableId" value="LOCAL−00010" />
+      <updated>1762353613021</updated>
+    </task>
+    <task id="LOCAL−00011" summary="Test Changes">
+      <option name="closed" value="true" />
+      <created>1762360257842</created>
+      <option name="number" value="LOCAL−00011" />
+      <option name="presentableId" value="LOCAL−00011" />
+      <updated>1762360257842</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Gjort ferdig Html og css" />
+    <MESSAGE value="La til JavaScript for mobilmeny:&#10;- Toggle åpne/lukke meny&#10;- Lukk meny når en navigasjonslenke klikkes" />
+    <MESSAGE value="Ryddet opp i animasjoner og scroll-funksjoner" />
+    <MESSAGE value="Forbedret typewriter-effekt i About-seksjonen" />
+    <MESSAGE value="Forbedret index.html og påbegynte utvikling av Cyber Snake (HTML + CSS)" />
+    <MESSAGE value="La til Snake-spillet med canvas-tegning, bevegelse, mat-oppdatering og score-håndtering" />
+    <MESSAGE value="&#10;La til DIRECTION-objekt for styring" />
+    <MESSAGE value="&#10;fullført snake.js for nå" />
+    <MESSAGE value="&#10;Endret snake.js for nå" />
+    <MESSAGE value="Påbeygnt game.html" />
+    <MESSAGE value="Test Changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Test Changes" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
