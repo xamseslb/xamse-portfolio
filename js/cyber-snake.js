@@ -28,7 +28,6 @@ let currentSpeed = baseSpeed;
 
 let gameRunning = true;
 let lastRenderTime = 0;
-let inputQueue = [];
 
 // Definerer retninger
 const DIRECTION = {
@@ -38,45 +37,47 @@ const DIRECTION = {
     RIGHT: { x: 1, y: 0 }
 };
 
-    let pendingDirection = null;
+let pendingDirection = null;
 
-    // starter spillet på nytt
-    function init(){
-        snake = [
-            { x: 15, y: 15 },
-            { x: 14, y: 15 },
-            { x: 13, y: 15 }
-        ];
-        dx = 1;
-        dy = 0;
-        score = 0;
-        currentSpeed = baseSpeed;
-        gameRunning = true;
-        pendingDirection = null;
+// Starter spillet på nytt
+function init() {
+    snake = [
+        { x: 15, y: 15 },
+        { x: 14, y: 15 },
+        { x: 13, y: 15 }
+    ];
+    dx = 1;
+    dy = 0;
+    score = 0;
+    currentSpeed = baseSpeed;
+    gameRunning = true;
+    pendingDirection = null;
 
-        generateFood();
-        updateScore();
-        hideGameOver();
+    generateFood();
+    updateScore();
+    hideGameOver();
 
-        lastRenderTime = 0;
-        requestAnimationFrame(gameLoop);
-    }
-
-        // spillets hoved-loop
-
-function gameLoop(currentTime){
-        if (!gameRunning)return;
-        requestAnimationFrame(gameLoop);
+    lastRenderTime = 0;
+    requestAnimationFrame(gameLoop);
 }
 
-const timeSinceLastRender = currentTime - lastRenderTime;
+// GAME LOOP ✅
+function gameLoop(currentTime) {
+    if (!gameRunning) return;
 
+    requestAnimationFrame(gameLoop);
 
-// Oppdaterer spill-logikken (bevegelse, kollisjon osv.)
+    const timeSinceLastRender = currentTime - lastRenderTime;
+    if (timeSinceLastRender < currentSpeed) return;
+    lastRenderTime = currentTime;
+
+    update();
+    draw();
+}
+
+// Oppdaterer spill-logikken
 function update() {
-    // Sjekker om vi trykket en ny retning
     if (pendingDirection) {
-        // Hindrer 180 graders snu
         if (!(dx === -pendingDirection.x && dy === -pendingDirection.y)) {
             dx = pendingDirection.x;
             dy = pendingDirection.y;
@@ -84,16 +85,13 @@ function update() {
         pendingDirection = null;
     }
 
-    // Nytt hode basert på retning
     const head = { x: snake[0].x + dx, y: snake[0].y + dy };
 
-    // Sjekker kollisjon med vegg
     if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
         gameOver();
         return;
     }
 
-    // Sjekker kollisjon med egen kropp
     for (let segment of snake) {
         if (head.x === segment.x && head.y === segment.y) {
             gameOver();
@@ -101,23 +99,20 @@ function update() {
         }
     }
 
-    // legger nytt hode
-    // Legger nytt hode
     snake.unshift(head);
 
-    // Hvis slangen spiser mat
     if (head.x === food.x && head.y === food.y) {
         score++;
         updateScore();
         generateFood();
-        currentSpeed = Math.max(40, baseSpeed - (score * 3)); // Gjør slangen raskere
+        currentSpeed = Math.max(40, baseSpeed - score * 3);
     } else {
-        snake.pop(); // Fjerner halen hvis ingen mat ble spist
+        snake.pop();
     }
 }
+
 // Tegner alt på skjermen
 function draw() {
-    // Bakgrunn
     ctx.fillStyle = '#0a0a0a';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -141,14 +136,11 @@ function drawGrid() {
     }
 }
 
-
-// Tegner slangen
 function drawSnake() {
     snake.forEach((segment, index) => {
         const x = segment.x * gridSize;
         const y = segment.y * gridSize;
 
-        // Kul neon-gradient
         const gradient = ctx.createRadialGradient(
             x + gridSize / 2, y + gridSize / 2, 2,
             x + gridSize / 2, y + gridSize / 2, gridSize
@@ -156,10 +148,10 @@ function drawSnake() {
 
         if (index === 0) {
             gradient.addColorStop(0, '#00d4ff');
-            gradient.addColorStop(1, '#0066ff'); // Hode
+            gradient.addColorStop(1, '#0066ff');
         } else {
             gradient.addColorStop(0, '#0099ff');
-            gradient.addColorStop(1, '#0044aa'); // Kropp
+            gradient.addColorStop(1, '#0044aa');
         }
 
         ctx.shadowBlur = 20;
@@ -172,7 +164,6 @@ function drawSnake() {
     });
 }
 
-// Tegner maten
 function drawFood() {
     const x = food.x * gridSize + gridSize / 2;
     const y = food.y * gridSize + gridSize / 2;
@@ -188,11 +179,9 @@ function drawFood() {
     ctx.beginPath();
     ctx.arc(x, y, gridSize / 2 - 2, 0, Math.PI * 2);
     ctx.fill();
-
     ctx.shadowBlur = 0;
 }
 
-// Plasserer mat på tilfeldig sted som ikke overlapper slangen
 function generateFood() {
     let newFood, valid = false;
     while (!valid) {
@@ -205,34 +194,26 @@ function generateFood() {
     food = newFood;
 }
 
-// Oppdaterer score i UI
 function updateScore() {
     document.getElementById('score').textContent = score;
 }
 
-// Viser "game over" skjerm
 function gameOver() {
     gameRunning = false;
     document.getElementById('finalScore').textContent = score;
     document.getElementById('gameOverModal').classList.add('show');
 }
 
-// Skjuler game over skjerm
 function hideGameOver() {
     document.getElementById('gameOverModal').classList.remove('show');
 }
 
-// Endrer retning
 function changeDirection(newDirection) {
     if (pendingDirection) return;
-
-    // Ikke snu rett bakover
     if (newDirection.x === -dx && newDirection.y === -dy) return;
-
     pendingDirection = newDirection;
 }
 
-// Input styring
 document.addEventListener('keydown', (e) => {
     switch(e.key) {
         case 'ArrowUp':
@@ -250,7 +231,6 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Restart-knapp
 document.getElementById('restartBtn').addEventListener('click', init);
 
 // Start spill
