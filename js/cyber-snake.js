@@ -228,6 +228,7 @@ document.addEventListener('keydown', (e) => {
         case 'ArrowRight':
         case 'd':
             changeDirection(DIRECTION.RIGHT); break;
+
     }
 });
 
