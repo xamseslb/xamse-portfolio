@@ -1,18 +1,18 @@
+// Global variabler
 let game = new Chess();
 let board = null;
+let aiWorker = null;
 
-let whiteTime = 300;
-let blackTime = 300;
+let whiteTime = 180;
+let blackTime = 180;
 let timerInterval = null;
 let currentTimer = 'white';
-
-let aiWorker = null;
-let currentDepth = 2;      // juster om du vil
 let isAiThinking = false;
 
-const pieceValues = { p:1, n:3, b:3, r:5, q:9, k:0 };
+const pieceValues = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
 
-const boardConfig = {
+// Brett konfigurasjon
+const config = {
     draggable: true,
     position: 'start',
     onDragStart: onDragStart,
@@ -21,36 +21,29 @@ const boardConfig = {
     pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png'
 };
 
+// Initialiserer spillet
 function initGame() {
-    // init state
     game = new Chess();
-    board = Chessboard('gameBoard', boardConfig);
+    board = Chessboard('gameBoard', config);
 
-    whiteTime = 300;
-    blackTime = 300;
+    whiteTime = 180;
+    blackTime = 180;
     currentTimer = 'white';
     isAiThinking = false;
 
     if (timerInterval) clearInterval(timerInterval);
-    timerInterval = null;
-
     if (aiWorker) aiWorker.terminate();
-    // VIKTIG: relativ sti fra /pages -> ../js/ai-worker.js
+
+    // Opprett AI worker
     aiWorker = new Worker('../js/ai-worker.js');
 
-    aiWorker.onmessage = (e) => {
-        const { move } = e.data;
-        isAiThinking = false;
-        if (!move) { updateTurnIndicator('Your Turn'); return; }
-        game.move(move);
-        board.position(game.fen());
-        currentTimer = 'white';
-        updateStatus();
-        updateMaterialScore();
+    aiWorker.onmessage = function(e) {
+        const move = e.data.move;
+        handleAiMove(move);
     };
 
-    aiWorker.onerror = (err) => {
-        console.error('AI worker error:', err);
+    aiWorker.onerror = function(err) {
+        console.error('AI Worker error:', err);
         isAiThinking = false;
         updateTurnIndicator('Your Turn');
     };
@@ -61,101 +54,244 @@ function initGame() {
     updateMaterialScore();
 }
 
+// Timer
 function startTimer() {
     timerInterval = setInterval(() => {
-        if (game.game_over()) { clearInterval(timerInterval); return; }
-        if (currentTimer === 'white') {
-            whiteTime = Math.max(0, whiteTime - 1);
-            if (whiteTime === 0) showGameOverModal('Time Out!', 'Black (CPU) wins on time!');
-        } else {
-            blackTime = Math.max(0, blackTime - 1);
-            if (blackTime === 0) showGameOverModal('Time Out!', 'White (You) win on time!');
+        if (game.game_over()) {
+            clearInterval(timerInterval);
+            return;
         }
+
+        if (currentTimer === 'white') {
+            whiteTime--;
+            if (whiteTime <= 0) {
+                whiteTime = 0;
+                clearInterval(timerInterval);
+                showGameOverModal('Tid ute!', 'Black (CPU) vinner på tid!');
+                return;
+            }
+        } else {
+            blackTime--;
+            if (blackTime <= 0) {
+                blackTime = 0;
+                clearInterval(timerInterval);
+                showGameOverModal('Tid ute!', 'White (You) vinner på tid!');
+                return;
+            }
+        }
+
         updateTimerDisplay();
     }, 1000);
 }
 
 function updateTimerDisplay() {
-    document.getElementById('whiteTimer').textContent = formatTime(whiteTime);
-    document.getElementById('blackTimer').textContent = formatTime(blackTime);
+    const whiteEl = document.getElementById('whiteTimer');
+    const blackEl = document.getElementById('blackTimer');
+
+    whiteEl.textContent = formatTime(whiteTime);
+    blackEl.textContent = formatTime(blackTime);
+
+    whiteEl.classList.remove('warning', 'critical');
+    blackEl.classList.remove('warning', 'critical');
+
+    if (whiteTime <= 30) whiteEl.classList.add('critical');
+    else if (whiteTime <= 60) whiteEl.classList.add('warning');
+
+    if (blackTime <= 30) blackEl.classList.add('critical');
+    else if (blackTime <= 60) blackEl.classList.add('warning');
 }
 
-const formatTime = s => `${Math.floor(s/60)}:${('0'+(s%60)).slice(-2)}`;
+function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+}
 
+// Sjekker om du kan flytte en brikke
 function onDragStart(source, piece) {
     if (game.game_over()) return false;
-    if (game.turn() === 'b') return false;      // du er alltid hvit
-    if (piece.startsWith('b')) return false;    // kan ikke flytte svarte brikker
+    if (game.turn() === 'b') return false;
+    if (piece.startsWith('b')) return false;
+    return true;
 }
 
+// Når du slipper en brikke
 function onDrop(source, target) {
-    const move = game.move({ from: source, to: target, promotion: 'q' });
-    if (!move) return 'snapback';
+    const move = game.move({
+        from: source,
+        to: target,
+        promotion: 'q'
+    });
+
+    if (move === null) return 'snapback';
 
     currentTimer = 'black';
     updateStatus();
     updateMaterialScore();
 
-    setTimeout(makeComputerMove, 200);
+    if (game.game_over()) {
+        clearInterval(timerInterval);
+        setTimeout(handleGameOver, 500);
+        return;
+    }
+
+    setTimeout(makeAiMove, 300);
 }
 
 function onSnapEnd() {
     board.position(game.fen());
 }
 
-function makeComputerMove() {
-    if (game.game_over()) return;
-    if (isAiThinking) return;
+// AI gjør trekk
+function makeAiMove() {
+    if (game.game_over() || isAiThinking) return;
 
     isAiThinking = true;
     updateTurnIndicator('CPU Thinking...');
-    aiWorker.postMessage({ fen: game.fen(), depth: currentDepth });
+
+    aiWorker.postMessage({
+        fen: game.fen(),
+        depth: 3
+    });
 }
 
+function handleAiMove(move) {
+    isAiThinking = false;
+
+    if (!move) {
+        console.error('Ingen AI-trekk mottatt');
+        updateTurnIndicator('Your Turn');
+        return;
+    }
+
+    game.move(move);
+    board.position(game.fen());
+    currentTimer = 'white';
+
+    updateStatus();
+    updateMaterialScore();
+
+    if (game.game_over()) {
+        clearInterval(timerInterval);
+        setTimeout(handleGameOver, 500);
+    }
+}
+
+// Oppdaterer status
 function updateStatus() {
-    const statusEl = document.getElementById('gameStatus');
+    let status = '';
+    let turnText = '';
 
     if (game.in_checkmate()) {
-        clearInterval(timerInterval);
-        if (game.turn() === 'w') showGameOverModal('Checkmate!', 'Black (CPU) wins!');
-        else showGameOverModal('Victory!', 'You defeated the CPU!');
-        return;
-    }
-    if (game.in_draw() || game.in_stalemate() || game.insufficient_material()) {
-        clearInterval(timerInterval);
-        showGameOverModal('Draw', 'The game is a draw.');
-        return;
+        status = 'Checkmate!';
+        turnText = game.turn() === 'w' ? 'Black Wins!' : 'You Win!';
+    } else if (game.in_draw()) {
+        status = 'Draw';
+        turnText = 'Game Over';
+    } else if (game.in_stalemate()) {
+        status = 'Stalemate';
+        turnText = 'Draw!';
+    } else if (game.in_threefold_repetition()) {
+        status = 'Draw by repetition';
+        turnText = 'Game Over';
+    } else if (game.insufficient_material()) {
+        status = 'Draw - insufficient material';
+        turnText = 'Game Over';
+    } else {
+        if (game.in_check()) {
+            status = 'Check!';
+        }
+        turnText = game.turn() === 'w' ? 'Your Turn' : 'CPU Thinking...';
     }
 
-    statusEl.textContent = game.in_check() ? 'Check!' : '';
-    updateTurnIndicator(game.turn() === 'w' ? 'Your Turn' : 'CPU Thinking...');
+    document.getElementById('gameStatus').textContent = status;
+    updateTurnIndicator(turnText);
 }
 
 function updateTurnIndicator(text) {
     document.getElementById('turnIndicator').textContent = text;
 }
 
+// Oppdaterer score
 function updateMaterialScore() {
     const fen = game.fen().split(' ')[0];
-    let white=0, black=0;
-    for (const c of fen) {
-        if (pieceValues[c]) black += pieceValues[c];
-        if (pieceValues[c.toLowerCase()]) white += pieceValues[c.toLowerCase()];
+    let whiteScore = 0;
+    let blackScore = 0;
+
+    for (let char of fen) {
+        if (char >= 'A' && char <= 'Z') {
+            const piece = char.toLowerCase();
+            if (pieceValues[piece]) whiteScore += pieceValues[piece];
+        }
+        if (char >= 'a' && char <= 'z') {
+            if (pieceValues[char]) blackScore += pieceValues[char];
+        }
     }
-    const diff = white - black;
-    const el = document.getElementById('materialScore');
-    el.textContent = `Score: ${diff >= 0 ? '+'+diff : diff}`;
+
+    const diff = whiteScore - blackScore;
+    const scoreEl = document.getElementById('scoreDisplay');
+
+    let whiteDisplay = '0';
+    let blackDisplay = '0';
+
+    if (diff > 0) {
+        whiteDisplay = `+${diff}`;
+        scoreEl.style.color = '#4ade80';
+    } else if (diff < 0) {
+        blackDisplay = `+${Math.abs(diff)}`;
+        scoreEl.style.color = '#f87171';
+    } else {
+        scoreEl.style.color = '#fff';
+    }
+
+    scoreEl.textContent = `${whiteDisplay} - ${blackDisplay}`;
+}
+
+// Game over håndtering
+function handleGameOver() {
+    let title = '';
+    let message = '';
+
+    if (game.in_checkmate()) {
+        if (game.turn() === 'w') {
+            title = 'Checkmate!';
+            message = 'Black (CPU) vinner!';
+        } else {
+            title = 'Victory!';
+            message = 'Du vant over CPU!';
+        }
+    } else if (game.in_stalemate()) {
+        title = 'Stalemate';
+        message = 'Spillet er uavgjort.';
+    } else if (game.in_threefold_repetition()) {
+        title = 'Draw';
+        message = 'Uavgjort ved repetisjon.';
+    } else if (game.insufficient_material()) {
+        title = 'Draw';
+        message = 'Uavgjort - ikke nok materiale.';
+    } else if (game.in_draw()) {
+        title = 'Draw';
+        message = 'Spillet er uavgjort.';
+    }
+
+    showGameOverModal(title, message);
 }
 
 function showGameOverModal(title, message) {
-    document.getElementById('modalTitle').textContent = title;
-    document.getElementById('modalMessage').textContent = message;
-    document.getElementById('gameModal').classList.add('active');
+    const modal = document.getElementById('gameModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMessage = document.getElementById('modalMessage');
+
+    modalTitle.textContent = title;
+    modalMessage.textContent = message;
+    modal.classList.add('active');
 }
 
-document.getElementById('restartBtn').onclick = () => {
+// Restart knapp
+document.getElementById('restartBtn').addEventListener('click', () => {
     document.getElementById('gameModal').classList.remove('active');
     initGame();
-};
+});
 
+// Start spillet
 initGame();

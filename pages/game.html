@@ -1,80 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cyber Chess - Xamse Portfolio</title>
-
-    <link rel="stylesheet" href="../css/game.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css"/>
+    <link rel="stylesheet" href="../css/game.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
 </head>
 <body>
-<div class="game-container">
-    <header class="game-header">
-        <a href="../index.html" class="back-btn">
-            <i class="fas fa-arrow-left"></i> Back to Portfolio
-        </a>
-        <h1 class="game-title">Cyber Chess</h1>
-    </header>
+    <div class="game-container">
+        <header class="game-header">
+            <a href="../index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Portfolio
+            </a>
+            <h1 class="game-title">Cyber Chess</h1>
+        </header>
 
-    <div class="game-content">
-        <div class="game-info">
-            <div class="player-info">
-                <div class="info-card player-card">
-                    <i class="fas fa-user"></i>
-                    <span>White (You)</span>
-                    <div class="timer" id="whiteTimer">5:00</div>
+        <div class="game-content">
+            <!-- Player Info Above Board -->
+            <div class="player-timers">
+                <div class="player-timer-card">
+                    <div class="player-name">
+                        <i class="fas fa-user"></i>
+                        White (You)
+                    </div>
+                    <div class="timer" id="whiteTimer">3:00</div>
                 </div>
-                <div class="info-card cpu-card">
-                    <i class="fas fa-robot"></i>
-                    <span>Black (CPU)</span>
-                    <div class="timer" id="blackTimer">5:00</div>
+                <div class="score-display" id="scoreDisplay">0 - 0</div>
+                <div class="player-timer-card">
+                    <div class="player-name">
+                        <i class="fas fa-robot"></i>
+                        Black (CPU)
+                    </div>
+                    <div class="timer" id="blackTimer">3:00</div>
                 </div>
             </div>
 
-            <div class="turn-indicator" id="turnIndicator">Your Turn</div>
-            <div class="game-status" id="gameStatus"></div>
-            <div class="material-score" id="materialScore">Score: 0</div>
-        </div>
+            <!-- Chess Board -->
+            <div class="board-container">
+                <div id="gameBoard" class="game-board"></div>
+            </div>
 
-        <div class="board-container">
-            <div id="gameBoard" class="game-board"></div>
-        </div>
-    </div>
-</div>
-
-<div id="gameModal" class="modal">
-    <div class="modal-content">
-        <h2 id="modalTitle" class="modal-title"></h2>
-        <p id="modalMessage" class="modal-message"></p>
-        <div class="modal-buttons">
-            <button id="restartBtn" class="modal-btn restart-btn">
-                <i class="fas fa-redo"></i> Restart Game
-            </button>
-            <a href="../index.html" class="modal-btn home-btn">
-                <i class="fas fa-home"></i> Back to Home
-            </a>
+            <!-- Game Status Info -->
+            <div class="game-info">
+                <div class="turn-indicator" id="turnIndicator">Your Turn</div>
+                <div class="game-status" id="gameStatus"></div>
+            </div>
         </div>
     </div>
-</div>
 
-<div id="promotionModal" class="modal">
-    <div class="modal-content">
-        <h2 class="modal-title">Promote Pawn</h2>
-        <p class="modal-message">Choose a piece:</p>
-        <div class="promotion-pieces">
-            <button class="promotion-btn" data-piece="q">♛ Queen</button>
-            <button class="promotion-btn" data-piece="r">♜ Rook</button>
-            <button class="promotion-btn" data-piece="b">♝ Bishop</button>
-            <button class="promotion-btn" data-piece="n">♞ Knight</button>
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle" class="modal-title"></h2>
+            <p id="modalMessage" class="modal-message"></p>
+            <div class="modal-buttons">
+                <button id="restartBtn" class="modal-btn restart-btn">
+                    <i class="fas fa-redo"></i> Restart Game
+                </button>
+                <a href="../index.html" class="modal-btn home-btn">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
         </div>
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.12.1/chess.min.js"></script>
-<script src="../js/game.js"></script>
+    <div id="promotionModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Promote Pawn</h2>
+            <p class="modal-message">Choose a piece:</p>
+            <div class="promotion-pieces">
+                <button class="promotion-btn" data-piece="q">♛ Queen</button>
+                <button class="promotion-btn" data-piece="r">♜ Rook</button>
+                <button class="promotion-btn" data-piece="b">♝ Bishop</button>
+                <button class="promotion-btn" data-piece="n">♞ Knight</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.12.1/chess.min.js"></script>
+    <script src="../js/game.js"></script>
 </body>
 </html>
