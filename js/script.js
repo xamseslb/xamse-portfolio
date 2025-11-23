@@ -14,6 +14,33 @@ navLinks.forEach(link => {
     });
 });
 
+// Dark Mode Toggle
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
+const icon = themeToggle.querySelector('i');
+
+// Check for saved theme preference
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+    body.classList.add('dark-mode');
+    icon.classList.remove('fa-moon');
+    icon.classList.add('fa-sun');
+}
+
+themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+    
+    if (body.classList.contains('dark-mode')) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'light');
+    }
+});
+
 // Navbar scroll effect
 const navbar = document.querySelector('.navbar');
 let lastScroll = 0;
@@ -29,6 +56,155 @@ window.addEventListener('scroll', () => {
 
     lastScroll = currentScroll;
 });
+
+// Hero Canvas Animation
+const canvas = document.getElementById('heroCanvas');
+const ctx = canvas.getContext('2d');
+
+let width, height;
+let particles = [];
+
+// Resize canvas
+function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+}
+
+window.addEventListener('resize', resize);
+resize();
+
+// Mouse position
+let mouse = {
+    x: null,
+    y: null,
+    radius: 150
+};
+
+window.addEventListener('mousemove', (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+});
+
+// Particle class
+class Particle {
+    constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 1;
+        this.vy = (Math.random() - 0.5) * 1;
+        this.size = Math.random() * 3 + 1;
+        this.baseX = this.x;
+        this.baseY = this.y;
+        this.density = (Math.random() * 30) + 1;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
+        
+        // Color based on theme
+        if (document.body.classList.contains('dark-mode')) {
+            ctx.fillStyle = 'rgba(102, 126, 234, 0.5)';
+        } else {
+            ctx.fillStyle = 'rgba(102, 126, 234, 0.3)';
+        }
+        
+        ctx.fill();
+    }
+
+    update() {
+        // Mouse interaction
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        let forceDirectionX = dx / distance;
+        let forceDirectionY = dy / distance;
+        let maxDistance = mouse.radius;
+        let force = (maxDistance - distance) / maxDistance;
+        let directionX = forceDirectionX * force * this.density;
+        let directionY = forceDirectionY * force * this.density;
+
+        if (distance < mouse.radius) {
+            this.x -= directionX;
+            this.y -= directionY;
+        } else {
+            if (this.x !== this.baseX) {
+                let dx = this.x - this.baseX;
+                this.x -= dx / 10;
+            }
+            if (this.y !== this.baseY) {
+                let dy = this.y - this.baseY;
+                this.y -= dy / 10;
+            }
+        }
+        
+        // Movement
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Bounce off edges
+        if (this.x < 0 || this.x > width) this.vx = -this.vx;
+        if (this.y < 0 || this.y > height) this.vy = -this.vy;
+
+        this.draw();
+    }
+}
+
+function init() {
+    particles = [];
+    let numberOfParticles = (width * height) / 9000;
+    for (let i = 0; i < numberOfParticles; i++) {
+        particles.push(new Particle());
+    }
+}
+
+init();
+
+function animate() {
+    requestAnimationFrame(animate);
+    ctx.clearRect(0, 0, width, height);
+    
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+    }
+    
+    connect();
+}
+
+function connect() {
+    let opacityValue = 1;
+    for (let a = 0; a < particles.length; a++) {
+        for (let b = a; b < particles.length; b++) {
+            let distance = ((particles[a].x - particles[b].x) * (particles[a].x - particles[b].x))
+                + ((particles[a].y - particles[b].y) * (particles[a].y - particles[b].y));
+            
+            if (distance < (width/7) * (height/7)) {
+                opacityValue = 1 - (distance/20000);
+                
+                if (document.body.classList.contains('dark-mode')) {
+                    ctx.strokeStyle = 'rgba(102, 126, 234,' + opacityValue + ')';
+                } else {
+                    ctx.strokeStyle = 'rgba(102, 126, 234,' + opacityValue * 0.5 + ')';
+                }
+                
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(particles[a].x, particles[a].y);
+                ctx.lineTo(particles[b].x, particles[b].y);
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+animate();
+
+window.addEventListener('resize', () => {
+    resize();
+    init();
+});
+
 
 // Intersection Observer for animations
 const observerOptions = {
@@ -138,18 +314,6 @@ if (aboutContent) {
 
     aboutObserver.observe(aboutContent);
 }
-
-// Add parallax effect to gradient blobs
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const blobs = document.querySelectorAll('.gradient-blob');
-
-    blobs.forEach((blob, index) => {
-        const speed = 0.5 + (index * 0.1);
-        const yPos = -(scrolled * speed);
-        blob.style.transform = `translateY(${yPos}px)`;
-    });
-});
 
 // Add entrance animation delay to cards
 const skillCards = document.querySelectorAll('.skill-card');
